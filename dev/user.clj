@@ -7,10 +7,7 @@
             [schema.core :as s]
             [com.stuartsierra.component :as comp]
             [lens.system :refer [new-system]]
-            [environ.core :refer [env]]
-            [org.httpkit.client :as http]
-            [clojure.java.io :as io]
-            [lens.util :as u]))
+            [environ.core :refer [env]]))
 
 (s/set-fn-validation! true)
 
@@ -42,44 +39,3 @@
 (comment
   (reset)
   )
-
-(defn- home [filename]
-  (io/file (System/getProperty "user.home") filename))
-
-(defn- write-transit [o]
-  (u/write-transit :json {} o))
-
-(defn- send-command [uri cmd & attachments]
-  (if attachments
-    (http/post uri {:multipart (conj attachments
-                                     {:name "command"
-                                      :content (write-transit cmd)})})
-    (http/post uri {:body (write-transit cmd)})))
-
-(comment
-  (-> (send-command "http://localhost:5008/command"
-                    [:create-study {:study-oid "S001"}])
-      (deref)
-      (update :body slurp)
-      (select-keys [:status :body]))
-
-  (-> (send-command "http://localhost:5008/batch-command"
-                    '[:import-clinical-data {:file file}]
-                    {:name "file"
-                     :content (home "z/S001_D00044.xml")
-                     :filename "S001_D00044.xml"})
-      (deref)
-      (update :body slurp)
-      (select-keys [:status :body]))
-
-  (-> (send-command "http://localhost:5008/batch-command"
-                    '[:import-clinical-data {:file file}]
-                    {:name "file"
-                     :content (home "z/S001_T00001.xml")
-                     :filename "S001_T00001.xml"})
-      (deref)
-      (update :body slurp)
-      (select-keys [:status :body]))
-
-  )
-

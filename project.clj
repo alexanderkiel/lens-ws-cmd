@@ -6,7 +6,7 @@
 
   :dependencies [[org.clojure/clojure "1.8.0"]
                  [org.clojure/tools.logging "0.3.1"]
-                 [org.clojure/tools.reader "0.9.2"]
+                 [org.clojure/tools.reader "0.10.0"]
                  [prismatic/plumbing "0.5.2"]
                  [prismatic/schema "1.0.4"]
                  [http-kit "2.1.18"]
@@ -15,7 +15,8 @@
                  [com.cognitect/transit-clj "0.8.285"]
                  [org.slf4j/slf4j-api "1.7.7"]
                  [ch.qos.logback/logback-classic "1.1.2"]
-                 [com.novemberain/langohr "3.5.1"]
+                 [com.novemberain/langohr "3.5.1"
+                  :exclusions [clj-http cheshire]]
                  [javax.servlet/servlet-api "2.5"]
                  [com.taoensso/carmine "2.12.2"]
                  [com.stuartsierra/component "0.3.0"]
