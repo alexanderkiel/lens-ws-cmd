@@ -30,7 +30,7 @@
     (info {:version version})
     (info {:max-memory (max-memory)})
     (info {:num-cpus (available-processors)})
-    (info {:broker (:host broker)})
+    (info {:broker (select-keys broker [:host :port :username])})
     (info {:file-storage (:file-storage-host server)})
     (info {:listen (str "0.0.0.0:" port)})
     (info {:num-worker-threads thread})))

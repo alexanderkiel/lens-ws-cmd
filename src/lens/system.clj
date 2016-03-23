@@ -5,14 +5,17 @@
             [lens.broker :refer [new-broker]]
             [lens.util :as u]))
 
-(defnk new-system [lens-ws-cmd-version port broker-host queue-prefix file-storage-host]
+(defnk new-system [lens-ws-cmd-version port broker-host
+                   {broker-username "guest"} {broker-password "guest"}
+                   queue-prefix file-storage-host]
   (comp/system-map
     :version lens-ws-cmd-version
     :port (u/parse-long port)
     :thread 4
 
     :broker
-    (new-broker {:host broker-host :queue-prefix queue-prefix})
+    (new-broker {:host broker-host :username broker-username
+                 :password broker-password :queue-prefix queue-prefix})
 
     :server
     (comp/using (new-server file-storage-host) [:port :thread :broker])))
