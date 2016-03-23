@@ -1,4 +1,4 @@
-(defproject lens-ws-cmd "0.1-SNAPSHOT"
+(defproject lens-ws-cmd "0.1"
   :description "Lens Command Webservice"
   :url "https://github.com/alexanderkiel/lens-ws-cmd"
   :license {:name "Eclipse Public License"
@@ -10,9 +10,9 @@
                  [prismatic/plumbing "0.5.2"]
                  [prismatic/schema "1.0.4"]
                  [http-kit "2.1.18"]
-                 [ring/ring-core "1.4.0"]
                  [bidi "1.25.0"]
                  [com.cognitect/transit-clj "0.8.285"]
+                 [clj-time "0.11.0"]
                  [org.slf4j/slf4j-api "1.7.7"]
                  [ch.qos.logback/logback-classic "1.1.2"]
                  [com.novemberain/langohr "3.5.1"
