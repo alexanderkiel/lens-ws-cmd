@@ -1,11 +1,15 @@
 (ns lens.handler
-  "HTTP Handlers"
+  "HTTP Handlers
+
+  * health-handler
+  * command-handler
+  * batch-command-handler"
   (:use plumbing.core)
-  (:require [lens.broker :as b :refer [send-command]]
-            [cognitect.transit :as t]
+  (:require [clj-uuid :as uuid]
             [clojure.java.io :as io]
-            [schema.core :as s :refer [Symbol Any Keyword]]
-            [clj-uuid :as uuid])
+            [cognitect.transit :as t]
+            [lens.broker :as b]
+            [schema.core :as s :refer [Any Keyword Symbol Str]])
   (:refer-clojure :exclude [read]))
 
 (set! *warn-on-reflection* true)
@@ -51,7 +55,7 @@
 (defn attach-id [command]
   (assoc command :id (uuid/v4) :sub "system"))
 
-(defn- coerce [command attachments]
+(s/defn coerce :- b/Command [command :- Str attachments]
   (-> command
       (read)
       (validate)
@@ -62,10 +66,10 @@
   {:status 422
    :body msg})
 
-(s/defn handle-command [broker command attachments & [batch?]]
+(s/defn handle-command [broker command :- Str attachments & [batch?]]
   (try
     (let [command (coerce command attachments)]
-      (send-command broker command batch?)
+      (b/send-command broker command batch?)
       {:status 200
        :body "OK"})
     (catch Exception e

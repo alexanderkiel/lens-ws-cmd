@@ -9,7 +9,7 @@ The Lens Command Webservice provides the HTTP endpoint for commands in the CQRS 
 
 ## Commands
 
-A command is a tuple of command name and params. The command name is a keyword. Params is a map.
+A command is a tuple of command name and params. The command name is a keyword. Params are a map.
 
 ```clojure
 [:create-user {:name "John Doe"}]
