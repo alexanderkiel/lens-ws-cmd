@@ -11,11 +11,17 @@ The Lens Command Webservice provides the HTTP endpoint for commands in the CQRS 
 
 ## Commands
 
-A command is a tuple of command name and params. The command name is a keyword. Params are a map.
+A command is a tuple of command name and params or a triple of name, id and params. The command name is a keyword. The id is an UUID. Params are a map.
 
 ```clojure
 [:create-user {:name "John Doe"}]
 ```
+
+```clojure
+[:create-user #uuid "612db307-6a67-4945-8823-238950130bde" {:name "John Doe"}]
+```
+
+Commands without an id, get an id attached. The advantage of sending a command with id is that the command becomes idempotent.
 
 Commands can reference attachments which can be files or arbitrary binary blobs. Referencing attachments is done by symbols in the param map.
 

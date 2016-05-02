@@ -9,7 +9,7 @@
             [clojure.java.io :as io]
             [cognitect.transit :as t]
             [lens.broker :as b]
-            [schema.core :as s :refer [Any Keyword Symbol Str]])
+            [schema.core :as s :refer [Any Keyword Str Symbol Uuid]])
   (:refer-clojure :exclude [read]))
 
 (set! *warn-on-reflection* true)
@@ -32,12 +32,21 @@
 (def ^:private Command
   "Short humand-writeable Command."
   [(s/one Keyword "name")
+   (s/optional (s/cond-pre Uuid Params) "id-or-params")
    (s/optional Params "params")])
 
 (defn- validate [command]
-  (let [[name params] (s/validate Command command)]
+  (s/validate Command command))
+
+(extend-protocol uuid/UUIDRfc4122
+  nil
+  (uuid? [x] false))
+
+(s/defn decode [command :- Command]
+  (let [[name id-or-params params] command]
     {:name name
-     :params params}))
+     :id (if (uuid/uuid? id-or-params) id-or-params (uuid/v4))
+     :params (if (map? id-or-params) id-or-params params)}))
 
 (defn- resolve-attachment [v attachments]
   (if (symbol? v)
@@ -52,15 +61,17 @@
 (defn- resolve-attachments [command attachments]
   (update command :params resolve-attachments' attachments))
 
-(defn attach-id [command]
-  (assoc command :id (uuid/v4) :sub "system"))
+(defn attach-sub [command]
+  (assoc command :sub "system"))
 
-(s/defn coerce :- b/Command [command :- Str attachments]
+(s/defn coerce :- b/Command
+  [command :- Str attachments]
   (-> command
       (read)
       (validate)
+      (decode)
       (resolve-attachments attachments)
-      (attach-id)))
+      (attach-sub)))
 
 (defn- error [msg]
   {:status 422
