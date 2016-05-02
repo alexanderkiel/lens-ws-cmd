@@ -1,5 +1,7 @@
 # Lens Command Webservice
 
+[![Build Status](https://travis-ci.org/alexanderkiel/lens-ws-cmd.svg?branch=master)](https://travis-ci.org/alexanderkiel/lens-ws-cmd)
+
 The Lens Command Webservice provides the HTTP endpoint for commands in the CQRS architecture of Lens. It does the following:
 
 * user authentication
