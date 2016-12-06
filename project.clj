@@ -1,4 +1,4 @@
-(defproject lens-ws-cmd "0.2"
+(defproject lens-ws-cmd "0.3"
   :description "Lens Command Webservice"
   :url "https://github.com/alexanderkiel/lens-ws-cmd"
   :license {:name "Eclipse Public License"
